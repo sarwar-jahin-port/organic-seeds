@@ -1,199 +1,194 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
+import { deleteMonthlyItem, getCart } from '../../utilities/cart';
 
 const OrderForm = () => {
-  const { register, control, handleSubmit, watch, formState: { errors } } = useForm({
-    defaultValues: {
-      products: [{ name: '', quantity: 1, unitPrice: 0, total: 0 }],
-      subTotal: 0,
-      shipping: 0,
-    }
-  });
+  const [subTotal, setSubTotal] = useState(0);
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "products",
-  });
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-  const watchProducts = watch("products");
+  const { monthly } = getCart();
 
-  const calculateTotal = (index) => {
-    const product = watchProducts[index];
-    return product.quantity * product.unitPrice;
+  const defaultValues = monthly.reduce((acc, m)=>{
+    acc[`quantity${m}`] = 1;
+    acc[`total${m}`] = 150;
+    return acc;
+  }, {});
+
+  const { register, setValue, handleSubmit, watch, formState: { errors } } = useForm({defaultValues,});
+  // console.log("quantity0", watch("quantity0"));
+  // console.log("quantity1", watch("quantity1"));
+  // console.log("quantity2", watch("quantity2"));
+
+  console.log("total0", watch("total0"));
+  // console.log("total1", watch("total1"));
+  // console.log("total2", watch("total2"));
+
+  let stotal = ()=> monthly.reduce((acc, m) => acc + (watch(`total${m}`)) || 0, 0);
+
+  const handleQuantityChange = (index) => {
+    const quantity = watch(`quantity${index}`);
+    const total = quantity * 150;
+    setValue(`total${index}`, total);
+    setSubTotal(stotal());
   };
 
-  const calculateSubTotal = () => {
-    return watchProducts.reduce((acc, product) => acc + (product.quantity * product.unitPrice), 0);
-  };
-
+  useEffect(()=>{setSubTotal(stotal())},[])
   const onSubmit = data => {
     console.log(data);
   };
 
   return (
     <div className="container mx-auto p-4">
-      <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Customer Information */}
         <div className="w-full p-4 border">
           <h2 className="text-2xl font-bold mb-4">Customer Information</h2>
-          
+
           <div className="mb-4">
             <label className="block mb-2" htmlFor="name">Name</label>
-            <input 
-              type="text" 
-              id="name" 
-              {...register('name', { required: 'Name is required' })} 
-              className="input input-bordered w-full" 
+            <input
+              type="text"
+              id="name"
+              {...register('name', { required: 'Name is required' })}
+              className="input input-bordered w-full"
             />
             {errors.name && <p className="text-red-500">{errors.name.message}</p>}
           </div>
 
           <div className="mb-4">
             <label className="block mb-2" htmlFor="phone">Phone</label>
-            <input 
-              type="text" 
-              id="phone" 
-              {...register('phone', { required: 'Phone number is required' })} 
-              className="input input-bordered w-full" 
+            <input
+              type="text"
+              id="phone"
+              {...register('phone', { required: 'Phone number is required' })}
+              className="input input-bordered w-full"
             />
             {errors.phone && <p className="text-red-500">{errors.phone.message}</p>}
           </div>
 
           <div className="mb-4">
             <label className="block mb-2" htmlFor="email">Email (optional)</label>
-            <input 
-              type="email" 
-              id="email" 
-              {...register('email')} 
-              className="input input-bordered w-full" 
+            <input
+              type="email"
+              id="email"
+              {...register('email')}
+              className="input input-bordered w-full"
             />
           </div>
 
           <div className="mb-4">
             <label className="block mb-2" htmlFor="division">Division</label>
-            <input 
-              type="text" 
-              id="division" 
-              {...register('division', { required: 'Division is required' })} 
-              className="input input-bordered w-full" 
+            <input
+              type="text"
+              id="division"
+              {...register('division', { required: 'Division is required' })}
+              className="input input-bordered w-full"
             />
             {errors.division && <p className="text-red-500">{errors.division.message}</p>}
           </div>
 
           <div className="mb-4">
             <label className="block mb-2" htmlFor="subDivision">Sub Division</label>
-            <input 
-              type="text" 
-              id="subDivision" 
-              {...register('subDivision', { required: 'Sub Division is required' })} 
-              className="input input-bordered w-full" 
+            <input
+              type="text"
+              id="subDivision"
+              {...register('subDivision', { required: 'Sub Division is required' })}
+              className="input input-bordered w-full"
             />
             {errors.subDivision && <p className="text-red-500">{errors.subDivision.message}</p>}
           </div>
 
           <div className="mb-4">
             <label className="block mb-2" htmlFor="roadFlat">Road or Flat No.</label>
-            <input 
-              type="text" 
-              id="roadFlat" 
-              {...register('roadFlat', { required: 'Road or Flat No. is required' })} 
-              className="input input-bordered w-full" 
+            <input
+              type="text"
+              id="roadFlat"
+              {...register('roadFlat', { required: 'Road or Flat No. is required' })}
+              className="input input-bordered w-full"
             />
             {errors.roadFlat && <p className="text-red-500">{errors.roadFlat.message}</p>}
           </div>
         </div>
-
-        {/* Order Details */}
         <div className="w-full p-4 border">
-          <h2 className="text-2xl font-bold mb-4">Order Details</h2>
-          
-          <table className="table w-full mb-4">
+          <table className="table">
+            {/* head */}
             <thead>
               <tr>
-                <th>Product Name</th>
+                <th>
+                  <label>
+                    <input type="checkbox" className="checkbox" />
+                  </label>
+                </th>
+                <th>Product Details</th>
                 <th>Quantity</th>
                 <th>Unit Price</th>
                 <th>Total</th>
-                <th>hello</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {fields.map((field, index) => (
-                <tr key={field.id}>
-                  <td>
-                    <input 
-                      type="text" 
-                      {...register(`products.${index}.name`, { required: 'Product name is required' })} 
-                      className="input input-bordered w-full" 
-                    />
-                    {errors.products?.[index]?.name && <p className="text-red-500">{errors.products[index].name.message}</p>}
-                  </td>
-                  <td>
-                    <input 
-                      type="number" 
-                      {...register(`products.${index}.quantity`, { required: 'Quantity is required', min: 1 })} 
-                      className="input input-bordered w-full" 
-                    />
-                    {errors.products?.[index]?.quantity && <p className="text-red-500">{errors.products[index].quantity.message}</p>}
-                  </td>
-                  <td>
-                    <input 
-                      type="number" 
-                      {...register(`products.${index}.unitPrice`, { required: 'Unit price is required', min: 0 })} 
-                      className="input input-bordered w-full" 
-                    />
-                    {errors.products?.[index]?.unitPrice && <p className="text-red-500">{errors.products[index].unitPrice.message}</p>}
-                  </td>
-                  <td>
-                    {calculateTotal(index)}
-                  </td>
-                  <td>
-                    <button type="button" className="btn btn-error btn-sm" onClick={() => remove(index)}>Remove</button>
-                  </td>
-                </tr>
-              ))}
-              <tr>
-                <td colSpan="5">
-                  <button type="button" className="btn btn-secondary w-full" onClick={() => append({ name: '', quantity: 1, unitPrice: 0, total: 0 })}>
-                    Add Product
-                  </button>
+              {monthly.map((m, mIndex) => <tr key={mIndex}>
+                <th>
+                  <label>
+                    <input type="checkbox" className="checkbox" />
+                  </label>
+                </th>
+                <td>
+                  <div className="flex items-center gap-3">
+                    <div className="avatar">
+                      <div className="mask mask-squircle h-12 w-12">
+                        <img
+                          src="https://img.daisyui.com/images/profile/demo/2@94.webp"
+                          alt="Avatar Tailwind CSS Component" />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="font-bold" {...register(`name${mIndex}`)}>{`${months[m]} pack`}</div>
+                    </div>
+                  </div>
                 </td>
+                <td>
+                  <input 
+                    className='border' 
+                    type="number" 
+                    name="" 
+                    id="" 
+                    defaultValue={1} 
+                    min={1} 
+                    max={5}
+                    {...register(`quantity${mIndex}`, {onChange: () => handleQuantityChange(mIndex)})}/>
+                </td>
+                <td>150 tk</td>
+                <td>
+                  <input 
+                    className='bg-transparent'
+                    type="number" 
+                    {...register(`total${mIndex}`)}
+                    defaultValue={150}
+                    value={watch(`total${mIndex}`)}
+                    disabled
+                    />tk
+                </td>
+                <th>
+                  <button type='button' className="btn btn-ghost btn-xs" onClick={()=>handleMonthlyDelete(m)}>Delete</button>
+                </th>
+              </tr>)}
+              <tr>
+                <td></td>
+                <td className='font-bold'>SUB TOTAL</td>
+                <td></td>
+                <td></td>
+                <td className='font-bold text-end'>
+                  <p {...register("subTotal")}>Product Total: {subTotal} tk</p>
+                  <p>Delivery Charge: 80 tk</p>
+                  <hr />
+                  Sub Total: 980 tk
+                </td>
+                <td></td>
               </tr>
             </tbody>
           </table>
-
-          <div className="mb-4">
-            <label className="block mb-2" htmlFor="subTotal">Sub Total</label>
-            <input 
-              type="number" 
-              id="subTotal" 
-              value={calculateSubTotal()} 
-              readOnly 
-              className="input input-bordered w-full" 
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block mb-2" htmlFor="shipping">Shipping</label>
-            <input 
-              type="number" 
-              id="shipping" 
-              {...register('shipping', { required: 'Shipping cost is required', min: 0 })} 
-              className="input input-bordered w-full" 
-            />
-            {errors.shipping && <p className="text-red-500">{errors.shipping.message}</p>}
-          </div>
-
-          <div className="mb-4">
-            <label className="block mb-2" htmlFor="total">Total</label>
-            <input 
-              type="number" 
-              id="total" 
-              value={calculateSubTotal() + (watch("shipping") || 0)} 
-              readOnly 
-              className="input input-bordered w-full" 
-            />
-          </div>
         </div>
 
         {/* Submit Button */}

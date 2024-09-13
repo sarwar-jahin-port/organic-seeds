@@ -23,7 +23,7 @@ const CategoryList = () => {
                     <details className="dropdown">
                         <summary className="btn btn-success m-1 md:text-2xl font-bold">SHAK SEEDS</summary>
                         <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                            {categories[0].shak.map((e, i) => <li><a>{e}</a></li>)}
+                            {categories[0].shak.map((e, i) => <li key={i}><a>{e}</a></li>)}
                         </ul>
                     </details>
                 </div>
@@ -31,7 +31,7 @@ const CategoryList = () => {
                     <details className="dropdown">
                         <summary className="btn btn-success m-1 md:text-2xl font-bold">VEGETABLES SEEDS</summary>
                         <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                            {categories[1].vegetables.map((e, i) => <li><a>{e}</a></li>)}
+                            {categories[1].vegetables.map((e, i) => <li key={i}><a>{e}</a></li>)}
                         </ul>
                     </details>
                 </div>
@@ -39,7 +39,7 @@ const CategoryList = () => {
                 <details className="dropdown">
                         <summary className="btn btn-success m-1 md:text-2xl font-bold">FLOWER SEEDS</summary>
                         <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                            {categories[2].flowers.map((e, i) => <li><a>{e}</a></li>)}
+                            {categories[2].flowers.map((e, i) => <li key={i}><a>{e}</a></li>)}
                         </ul>
                     </details>
                 </div>
@@ -47,7 +47,7 @@ const CategoryList = () => {
                 <details className="dropdown">
                         <summary className="btn btn-success m-1 md:text-2xl font-bold">CHINESE SEEDS</summary>
                         <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                            {categories[3]['chinese-seeds'].map((e, i) => <li><a>{e}</a></li>)}
+                            {categories[3]['chinese-seeds'].map((e, i) => <li key={i}><a>{e}</a></li>)}
                         </ul>
                     </details>
                 </div>

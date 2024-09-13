@@ -4,8 +4,10 @@ import CategoryList from '../components/home/CategoryList'
 import Monthly from '../components/home/Monthly'
 import Recommended from '../components/home/Recommended'
 import OrderForm from '../components/home/OrderForm'
+import { initializeCart } from '../utilities/cart'
 
 const Home = () => {
+  initializeCart();
   return (
     <div>
       <SlidingBanner/>
