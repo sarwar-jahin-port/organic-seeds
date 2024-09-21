@@ -31,7 +31,7 @@ exports.getOrderById = async (req, res) =>{
         if(!order){
             return res.status(404).json({success: false, error: "Order not found"})
         }
-        res.status(500).json({success: true, data: order})
+        res.status(200).json({success: true, data: order})
     } catch (error) {
         console.error("Error fetchind order by ID: ", error);
         res.status(500).json({success: false, error: "Failed to retrieve order by ID"})

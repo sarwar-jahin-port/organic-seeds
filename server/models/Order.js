@@ -3,7 +3,7 @@ const {Schema} = mongoose;
 
 // Location Schema
 const LocationSchema = new Schema({
-    division: {type: stringify, required: true},
+    division: {type: String, required: true},
     sub_division: {type: String, required: true},
     road_or_flat: {type: String, required: true},
 });
@@ -26,10 +26,9 @@ const CustomerInfoSchema = new Schema({
 
 // Order Schema
 const OrderSchema = new Schema({
-    order_no: {type: String, required: true},
     order_creation_date: {type: Date, required: true},
     skus: {type: {SkuSchema}, required: true},
     customer_info: {type: CustomerInfoSchema, required: true},
 });
 
-module.exports = mongoose.mode('Order', OrderSchema);
+module.exports = mongoose.model('Order', OrderSchema, 'orders');
