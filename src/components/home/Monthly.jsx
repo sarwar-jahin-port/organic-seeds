@@ -26,7 +26,7 @@ import decPop from "../../assets/monthly-pop-up/december.png"
 import { FaCartArrowDown } from "react-icons/fa";
 import { addMonthlyItem } from '../../utilities/cart'
 
-const Monthly = () => {
+const Monthly = ({setIsChange}) => {
     const [popImg, setPopImg] = useState(janPop);
     const btns = [janBtn, febBtn, marBtn, aprBtn, mayBtn, junBtn, julBtn, augBtn, sepBtn, octBtn, novBtn, decBtn];
     const pops = [janPop, febPop, marPop, aprPop, mayPop, junPop, julPop, augPop, sepPop, octPop, novPop, decPop];
@@ -39,9 +39,10 @@ const Monthly = () => {
     const handleCart = (index) =>{
         console.log(index);
         addMonthlyItem(index);
+        setIsChange(prev =>!prev);
     }
   return (
-    <div className='mt-60'>
+    <div className='mt-60 w-4/5 mx-auto'>
         <h1 className='text-5xl text-center mb-5'>MONTHLY PACKS</h1>
         <div className="monthly grid grid-cols-10 gap-4">
             <div className="left-months col-span-2 border">

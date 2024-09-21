@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
-import { deleteMonthlyItem, getCart } from '../../utilities/cart';
+import { calculateTotal, deleteMonthlyItem, getCart, setQuantityOne, updateMonthlyItem } from '../../utilities/cart';
 
-const OrderForm = () => {
-  const [subTotal, setSubTotal] = useState(0);
-
+const OrderForm = ({isChange}) => {
+  const [subTotal, setSubTotal] = useState(calculateTotal());
+  const [cart, setCart] = useState(getCart());
+  
+  // console.log("monthly: ", monthly);
+  const monthlyProducts = cart.monthlyProducts;
+  const products = cart.product;
+  // console.log(monthlyProducts, products);
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-  const { monthly } = getCart();
+  // const { monthly } = getCart();
 
-  const defaultValues = monthly.reduce((acc, m)=>{
-    acc[`quantity${m}`] = 1;
-    acc[`total${m}`] = 150;
+  const defaultValues = monthlyProducts.reduce((acc, m)=>{
+    acc[`quantity${m.item}`] = 1;
+    acc[`total${m.item}`] = 150;
     return acc;
   }, {});
 
@@ -24,19 +29,27 @@ const OrderForm = () => {
   // console.log("total1", watch("total1"));
   // console.log("total2", watch("total2"));
 
-  let stotal = ()=> monthly.reduce((acc, m) => acc + (watch(`total${m}`)) || 0, 0);
-
-  const handleQuantityChange = (index) => {
+  const handleQuantityChange = (m, index) => {
     const quantity = watch(`quantity${index}`);
+    updateMonthlyItem(m.pack, quantity);
     const total = quantity * 150;
     setValue(`total${index}`, total);
-    setSubTotal(stotal());
+    setSubTotal(calculateTotal());
   };
 
-  useEffect(()=>{setSubTotal(stotal())},[])
+  const handleMonthlyDelete = (item) =>{
+    deleteMonthlyItem(item);
+    setCart(getCart());
+  }
+  useEffect(()=>{},[cart]);
+
   const onSubmit = data => {
     console.log(data);
   };
+  useEffect(()=>{
+    setQuantityOne();
+    setSubTotal(calculateTotal());
+  }, [cart])
 
   return (
     <div className="container mx-auto p-4">
@@ -128,7 +141,7 @@ const OrderForm = () => {
               </tr>
             </thead>
             <tbody>
-              {monthly.map((m, mIndex) => <tr key={mIndex}>
+              {monthlyProducts.map((m, mIndex) => <tr key={mIndex}>
                 <th>
                   <label>
                     <input type="checkbox" className="checkbox" />
@@ -144,7 +157,7 @@ const OrderForm = () => {
                       </div>
                     </div>
                     <div>
-                      <div className="font-bold" {...register(`name${mIndex}`)}>{`${months[m]} pack`}</div>
+                      <div className="font-bold" {...register(`name${mIndex}`)}>{`${m.pack} pack`}</div>
                     </div>
                   </div>
                 </td>
@@ -157,7 +170,7 @@ const OrderForm = () => {
                     defaultValue={1} 
                     min={1} 
                     max={5}
-                    {...register(`quantity${mIndex}`, {onChange: () => handleQuantityChange(mIndex)})}/>
+                    {...register(`quantity${mIndex}`, {onChange: () => handleQuantityChange(m, mIndex)})}/>
                 </td>
                 <td>150 tk</td>
                 <td>
@@ -183,7 +196,7 @@ const OrderForm = () => {
                   <p {...register("subTotal")}>Product Total: {subTotal} tk</p>
                   <p>Delivery Charge: 80 tk</p>
                   <hr />
-                  Sub Total: 980 tk
+                  {`Sub Total: ${subTotal+80} tk`}
                 </td>
                 <td></td>
               </tr>

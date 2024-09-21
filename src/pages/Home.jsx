@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import SlidingBanner from '../components/home/SlidingBanner'
 import CategoryList from '../components/home/CategoryList'
 import Monthly from '../components/home/Monthly'
@@ -7,16 +7,20 @@ import OrderForm from '../components/home/OrderForm'
 import { initializeCart } from '../utilities/cart'
 
 const Home = () => {
+  const[isChange, setIsChange] = useState(false);
   initializeCart();
   return (
     <div>
       <SlidingBanner/>
       <CategoryList/>
-      <Monthly/>
+      <Monthly setIsChange={setIsChange}/>
       <Recommended/>
-      <OrderForm/>
+      <OrderForm isChange={isChange}/>
     </div>
   )
 }
 
 export default Home
+
+// sarwarjahin
+// Iw840XrlCiU7BPxW

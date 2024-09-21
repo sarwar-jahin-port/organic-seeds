@@ -1,10 +1,22 @@
 const express = require('express');
+const dotenv = require('dotenv');
+const connectDB = require("./config/db");
 const cors = require('cors');
-const app = express();
-const port = process.env.port || 3000
+const port = process.env.PORT || 3000
 
+// Load environment variables
+dotenv.config();
+
+// Connect to the database
+connectDB();
+
+// Initialize experss app
+const app = express();
+
+// Middleware for JSON body parsing
 app.use(cors());
 app.use(express.json());
+
 
 app.get('/', (req, res) =>{
     res.send("Organic Server Running!!!");

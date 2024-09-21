@@ -1,5 +1,7 @@
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
 export const initializeCart = () =>{
-    const initialCart = {monthly: [], product: []};
+    const initialCart = {monthlyProducts: [], products: []};
     const savedCart = localStorage.getItem('cart');
     if(!savedCart){
         localStorage.setItem('cart', JSON.stringify(initialCart));
@@ -15,21 +17,53 @@ export const saveCart = (cart) =>{
     localStorage.setItem('cart', JSON.stringify(cart));
 }
 
-export const addMonthlyItem = (item) =>{
+export const addMonthlyItem = (month) =>{
     const cart = getCart();
     if(cart){
-        for(const i of cart.monthly){
-            if(i==item) return;
+        for(const i of cart.monthlyProducts){
+            console.log(i.pack, month);
+            if(i.pack==months[month]){
+                console.log("Item already on cart");
+                return;
+            } 
         }
-        cart.monthly.push(item);
+        cart.monthlyProducts.push({pack: months[month], quantity: 1});
+        console.log("item pushed");
         saveCart(cart);
     }
 }
+export const updateMonthlyItem = (pack, quantity) =>{
+    const cart = getCart();
+    if(cart){
+        cart.monthlyProducts.forEach(item => {
+            if(item.pack == pack){
+                item.quantity = quantity;
+            }
+        });
+        saveCart(cart);
+    }
+}
+export const setQuantityOne = ()=>{
+    const cart = getCart();
+    if(cart){
+        cart.monthlyProducts.forEach(item => item.quantity=1);
+        saveCart(cart);
+    }
+}
+export const calculateTotal = () =>{
+    const cart = getCart();
+    let total = 0;
+    if(cart){
+        total = cart.monthlyProducts.reduce((acc, m) => acc + m.quantity*150, 0);
+    }
+    return total;
+}
 
 export const deleteMonthlyItem = (item) =>{
+    console.log(item);
     let cart = getCart();
     if(cart){
-            cart.monthly = cart.monthly.filter(c => c!= item);
+        cart.monthlyProducts = cart.monthlyProducts.filter(c => c.pack!= item.pack);
         saveCart(cart);
     }
 }
