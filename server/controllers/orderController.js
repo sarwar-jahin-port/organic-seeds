@@ -1,8 +1,8 @@
 const Order = require('../models/Order');
-const order = require('../models/Order');
 
 // Controller to create new order
 exports.createOrder = async (req, res) =>{
+    
     try {
         const newOrder = new Order(req.body);
         await newOrder.save();

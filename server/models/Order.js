@@ -27,7 +27,7 @@ const CustomerInfoSchema = new Schema({
 // Order Schema
 const OrderSchema = new Schema({
     order_creation_date: {type: Date, required: true},
-    skus: {type: {SkuSchema}, required: true},
+    skus: {type: [SkuSchema], required: true},
     customer_info: {type: CustomerInfoSchema, required: true},
 });
 

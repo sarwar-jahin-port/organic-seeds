@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { calculateTotal, deleteMonthlyItem, getCart, setQuantityOne, updateMonthlyItem } from '../../utilities/cart';
+import toast from 'react-hot-toast';
 
 const OrderForm = ({isChange}) => {
   const [subTotal, setSubTotal] = useState(calculateTotal());
@@ -44,18 +45,54 @@ const OrderForm = ({isChange}) => {
 
   useEffect(()=>{},[cart]);
 
-  const onSubmit = data => {
+  const onSubmit = async data => {
+    console.log(cart);
     const order = {
-      name: data.name,
-      phone: data.phone,
-      email: data.email,
-      division: data.division,
-      subDivision: data.subDivision,
-      roadFlat: data.roadFlat,
-      monthlyPacks: cart.monthlyProducts,
-      products: cart.products
+      order_creation_date: new Date(),
+      skus: [
+        ...cart.monthlyProducts.map((item, index) => ({
+          product_type: 'monthly',
+          product_name: item.pack,
+          product_name_second: item.pack,
+          quantity: document.getElementById(`quantity${index}`).value,
+        })),
+        ...cart.products.map(item =>({
+          product_type: 'regular',
+          product_name: item.pack,
+          product_name_second: item.pack,
+          quantity: item.quantity
+        }))
+      ],
+      customer_info: {
+        name: data.name,
+        phone: data.phone,
+        email: data.email,
+        location: [
+          {
+            division: data.division,
+            sub_division: data.subDivision,
+            road_or_flat: data.roadFlat,
+          }
+        ]
+      }
     }
     console.log(order);
+    try {
+      const response = await fetch("http://localhost:3000/api/create-order", {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(order),
+      });
+
+      const result = await response.json();
+      console.log("Order created successfully: ", result);
+      toast.success("Order created successfully");
+    } catch (error) {
+      toast.error("Failed to create an order");
+      console.log("Failed to create an order: ", error);
+    }
   };
   useEffect(()=>{
     setQuantityOne();
@@ -177,8 +214,8 @@ const OrderForm = ({isChange}) => {
                   <input 
                     className='border' 
                     type="number" 
-                    name="" 
-                    id="" 
+                    name={`quantity${mIndex}`}
+                    id={`quantity${mIndex}`} 
                     defaultValue={1} 
                     min={1} 
                     max={5}
