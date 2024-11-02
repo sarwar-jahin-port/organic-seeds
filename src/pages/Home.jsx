@@ -12,9 +12,9 @@ const Home = () => {
   return (
     <div>
       <SlidingBanner/>
-      <CategoryList/>
+      {/* <CategoryList/> */}
       <Monthly setIsChange={setIsChange}/>
-      <Recommended/>
+      {/* <Recommended/> */}
       <OrderForm isChange={isChange}/>
     </div>
   )

@@ -41,10 +41,21 @@ const OrderForm = ({isChange}) => {
     deleteMonthlyItem(item);
     setCart(getCart());
   }
+
   useEffect(()=>{},[cart]);
 
   const onSubmit = data => {
-    console.log(data);
+    const order = {
+      name: data.name,
+      phone: data.phone,
+      email: data.email,
+      division: data.division,
+      subDivision: data.subDivision,
+      roadFlat: data.roadFlat,
+      monthlyPacks: cart.monthlyProducts,
+      products: cart.products
+    }
+    console.log(order);
   };
   useEffect(()=>{
     setQuantityOne();
@@ -53,6 +64,7 @@ const OrderForm = ({isChange}) => {
 
   return (
     <div className="container mx-auto p-4">
+      <h1 className='text-5xl text-center mb-2'>Order Form</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Customer Information */}
         <div className="w-full p-4 border">

@@ -4,7 +4,7 @@ import banner2 from "../../assets/banner2.png";
 
 const SlidingBanner = () => {
     return (
-        <div className="carousel w-full">
+        <div className="carousel">
             <div id="slide1" className="carousel-item relative w-full">
                 <img
                     src={banner}

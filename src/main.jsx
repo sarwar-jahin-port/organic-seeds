@@ -11,6 +11,7 @@ import OrderList from './pages/OrderList.jsx';
 import PrivateRoute from './PrivateRoute/PrivateRoute.jsx';
 import OrderDetails from './pages/OrderDetails.jsx';
 import AllOrders from './pages/AllOrders.jsx';
+import { Toaster } from 'react-hot-toast';
 
 const router = createBrowserRouter([
   {
@@ -41,5 +42,6 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <RouterProvider router={router}/>
+    <Toaster/>
   </React.StrictMode>,
 )
