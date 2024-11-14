@@ -4,6 +4,7 @@ const connectDB = require("./config/db");
 const cors = require('cors');
 const port = process.env.PORT || 3000
 const orderRoutes = require("./routes/orderRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 // Load environment variables
 dotenv.config();
@@ -20,6 +21,7 @@ app.use(express.json());
 
 // Use order routes
 app.use("/api", orderRoutes);
+app.use("/api", userRoutes);
 
 app.get('/', (req, res) =>{
     res.send("Organic Server Running!!!");
