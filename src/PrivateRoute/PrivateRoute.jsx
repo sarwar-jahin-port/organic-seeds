@@ -1,11 +1,10 @@
-import React from 'react'
+import { Navigate } from 'react-router-dom';
 
-const PrivateRoute = ({children}) => {
-const user = true;
-if(!user) return <div className='min-h-screen flex justify-center items-center'><h1 className='text-5xl'>Page not found!</h1></div>;
-  return (
-    <div className='min-h-screen'>{children}</div>
-  )
-}
+const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem('token');
 
-export default PrivateRoute
+  // If token exists, allow access to the protected route
+  return token ? children : <Navigate to="/login" />;
+};
+
+export default PrivateRoute;

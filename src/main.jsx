@@ -12,6 +12,7 @@ import PrivateRoute from './PrivateRoute/PrivateRoute.jsx';
 import OrderDetails from './pages/OrderDetails.jsx';
 import AllOrders from './pages/AllOrders.jsx';
 import { Toaster } from 'react-hot-toast';
+import Login from './pages/Login.jsx';
 
 const router = createBrowserRouter([
   {
@@ -21,7 +22,21 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home/>
-      }, 
+      }
+    ]
+  },
+  {
+    path: "/jahin",
+    element: <MainLayout/>,
+    children: [
+      {
+        path: "",
+        element: <Login/>
+      },
+      {
+        path: "dashboard",
+        element: <PrivateRoute>Dashboard</PrivateRoute>
+      },
       {
         path:"order-list",
         element: <PrivateRoute><OrderList/></PrivateRoute>
@@ -35,7 +50,7 @@ const router = createBrowserRouter([
         element: <PrivateRoute><AllOrders/></PrivateRoute>
       }
     ]
-  },
+  }
 ]);
 
 
