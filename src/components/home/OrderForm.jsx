@@ -43,7 +43,9 @@ const OrderForm = ({isChange}) => {
     setCart(getCart());
   }
 
-  useEffect(()=>{},[cart]);
+  useEffect(()=>{
+    setCart(getCart())
+  },[isChange]);
 
   const onSubmit = async data => {
     console.log(cart);
@@ -172,16 +174,11 @@ const OrderForm = ({isChange}) => {
             {errors.roadFlat && <p className="text-red-500">{errors.roadFlat.message}</p>}
           </div>
         </div>
-        <div className="w-full p-4 border">
-          <table className="table">
+        <div className="w-full p-4 border overflow-x-auto">
+          <table className="table w-full">
             {/* head */}
             <thead>
               <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                </th>
                 <th>Product Details</th>
                 <th>Quantity</th>
                 <th>Unit Price</th>
@@ -191,11 +188,6 @@ const OrderForm = ({isChange}) => {
             </thead>
             <tbody>
               {monthlyProducts.map((m, mIndex) => <tr key={mIndex}>
-                <th>
-                  <label>
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                </th>
                 <td>
                   <div className="flex items-center gap-3">
                     <div className="avatar">
@@ -212,7 +204,7 @@ const OrderForm = ({isChange}) => {
                 </td>
                 <td>
                   <input 
-                    className='border' 
+                    className='border max-w-[4rem]' 
                     type="number" 
                     name={`quantity${mIndex}`}
                     id={`quantity${mIndex}`} 

@@ -31,7 +31,7 @@ const Login = () => {
       localStorage.setItem('token', data.token);
 
       // Redirect to the dashboard on successful login
-      navigate('/jahin/dashboard');
+      navigate('/jahin/order-list');
     } catch (err) {
       setError('Server error. Please try again later.');
     }

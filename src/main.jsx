@@ -34,15 +34,11 @@ const router = createBrowserRouter([
         element: <Login/>
       },
       {
-        path: "dashboard",
-        element: <PrivateRoute>Dashboard</PrivateRoute>
-      },
-      {
         path:"order-list",
         element: <PrivateRoute><OrderList/></PrivateRoute>
       },
       {
-        path: "order-list/order-details/:id",
+        path: "orders/id/:id",
         element: <PrivateRoute><OrderDetails/></PrivateRoute>
       },
       {

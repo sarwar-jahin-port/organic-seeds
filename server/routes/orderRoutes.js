@@ -8,20 +8,26 @@ router.post('/create-order', orderController.createOrder);
 // Route to get all orders
 router.get("/orders", orderController.getAllOrder);
 
+// Route to get rts orders
+router.get("/orders/rts", orderController.getRTSOrders)
+
 // Route to get orders by division
-router.get("/orders/:divison", orderController.getOrderByDivision);
+router.get("/orders/division/:divison", orderController.getOrderByDivision);
 
 // Route to get orders by sub division
-router.get("/orders/:sub_divison", orderController.getOrderBySubDivision);
+router.get("/orders/sub-division/:sub_divison", orderController.getOrderBySubDivision);
 
 // Route to get orders by customer name
-router.get("/orders/customer_name", orderController.getOrdersByCustomerName);
+router.get("/orders/customer-name/customer_name", orderController.getOrdersByCustomerName);
 
 // Route to get orders by phone number
-router.get("/orders/:phoneNumber", orderController.getOrdersByPhoneNumber);
+router.get("/orders/phone-number/:phoneNumber", orderController.getOrdersByPhoneNumber);
 
 // Route to get a single order by ID
-router.get("/orders/:id", orderController.getOrderById);
+router.get("/orders/id/:id", orderController.getOrderById);
+
+// Route to update order status by ID
+router.put("/orders/:id/status", orderController.updateOrderStatus)
 
 module.exports = router;
 

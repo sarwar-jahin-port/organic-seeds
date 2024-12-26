@@ -24,6 +24,17 @@ exports.getAllOrder = async(req, res) =>{
     }
 };
 
+// Controller to get rts orders
+exports.getRTSOrders = async (req, res) => {
+    try {
+        const rtsOrders = await Order.find({ status: 'rts' });
+        res.status(200).json({ success: true, data: rtsOrders });
+    } catch (error) {
+        console.error("Error fetching RTS orders: ", error);
+        res.status(500).json({ success: false, error: "Failed to retrieve RTS orders" });
+    }
+};
+
 // Controller to get an order by ID
 exports.getOrderById = async (req, res) =>{
     try {
@@ -97,3 +108,33 @@ exports.getOrderBySubDivision = async(req, res) =>{
         res.status(500).json({success: false, error: "Failed to retrieve orders by sub division"});
     }
 }
+
+// Controller to update order status
+exports.updateOrderStatus = async (req, res) => {
+    const { id } = req.params; // Extract order ID from URL parameters
+    const { status } = req.body; // Extract new status from the request body
+
+    // Validate the new status
+    const validStatuses = ['rts', 'shipped', 'delivered', 'cancelled'];
+    if (!validStatuses.includes(status)) {
+        return res.status(400).json({ success: false, error: "Invalid status value" });
+    }
+
+    try {
+        // Find the order by ID and update the status
+        const updatedOrder = await Order.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedOrder) {
+            return res.status(404).json({ success: false, error: "Order not found" });
+        }
+
+        res.status(200).json({ success: true, data: updatedOrder });
+    } catch (error) {
+        console.error("Error updating order status: ", error);
+        res.status(500).json({ success: false, error: "Failed to update order status" });
+    }
+};
